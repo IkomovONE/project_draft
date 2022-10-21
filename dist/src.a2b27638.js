@@ -187,7 +187,7 @@ var fetchData = /*#__PURE__*/function () {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            url = "./js/lut.geojson"; //const url = "https://geo.stat.fi/geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=tilastointialueet:kunta4500k&outputFormat=json&srsName=EPSG:4326"
+            url = "https://geo.stat.fi/geoserver/wfs?service=WFS&version=2.0.0&request=GetFeature&typeName=tilastointialueet:kunta4500k&outputFormat=json&srsName=EPSG:4326";
             _context.next = 3;
             return fetch(url);
           case 3:
@@ -213,69 +213,18 @@ var initMap = function initMap(data) {
     minZoom: -3
   });
   var geoJson = L.geoJSON(data, {
-    onEachFeature: getFeature,
-    style: getStyle
+    onEachFeature: getFeature(data),
+    weight: 2
   }).addTo(map);
   var osm = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
     attribution: "© OpenStreetMap"
   }).addTo(map);
-  var google = L.tileLayer("https://{s}.google.com/vt/lyrs=s@221097413,traffic&x={x}&y={y}&z={z}", {
-    maxZoom: 20,
-    minZoom: 2,
-    subdomains: ["mt0", "mt1", "mt2", "mt3"]
-  }).addTo(map);
-  var baseMaps = {
-    OpenStreetMap: osm,
-    "Google Maps": google
-  };
-  var overlayMaps = {
-    LUT: geoJson
-  };
-  var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);
   map.fitBounds(geoJson.getBounds());
 };
-var lutBuildings = [{
-  name: "Building 1",
-  year: 1972,
-  color: "#ffcc00"
-}, {
-  name: "Building 2",
-  year: 1982,
-  color: "#333333"
-}, {
-  name: "Building 3",
-  year: 1989,
-  color: "#888888"
-}, {
-  name: "Building 4",
-  year: 1995,
-  color: "#0000ff"
-}, {
-  name: "Building 5",
-  year: 1999,
-  color: "#ff0088"
-}, {
-  name: "Building 6",
-  year: 2001,
-  color: "#ff0000"
-}, {
-  name: "Building 7",
-  year: 2004,
-  color: "#eeff00"
-}];
-var getFeature = function getFeature(feature, layer) {
-  if (!feature.properties.id) return;
-  var id = feature.properties.id;
-  console.log(id);
-  layer.bindPopup("<ul>\n          <li>Name: ".concat(lutBuildings[id - 1].name, "</li>\n          <li>Year of construction: ").concat(lutBuildings[id - 1].year, "</li>\n      </ul>"));
-  layer.bindTooltip(lutBuildings[id - 1].name);
-};
-var getStyle = function getStyle(feature) {
-  return {
-    color: lutBuildings[feature.properties.id - 1].color,
-    fillOpacity: 0.5
-  };
+var getFeature = function getFeature(feature, layer, data) {
+  if (!feature.properties) return;
+  layer.bindPopup("\n  \n  <ul>\n    <li> Name: ".concat(data[feature.properties.id], "</li>\n    \n  </ul>\n  \n  \n  "));
 };
 fetchData();
 },{"./styles.css":"src/styles.css"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
@@ -303,7 +252,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38569" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42327" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
